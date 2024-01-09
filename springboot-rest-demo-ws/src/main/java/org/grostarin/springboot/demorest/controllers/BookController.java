@@ -8,6 +8,7 @@ import org.grostarin.springboot.demorest.dto.BookSearch;
 import org.grostarin.springboot.demorest.services.BookServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +39,11 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Book create(@RequestBody Book book) {
-        return bookServices.create(book);
+    public ResponseEntity<Book> create(@RequestBody Book book) {
+        if(bookServices.create(book)) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(book);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(book);
     }
 
     @DeleteMapping("/{id}")
